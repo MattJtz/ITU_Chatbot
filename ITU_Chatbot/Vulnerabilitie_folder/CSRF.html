@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vulnerable CSRF Example</title>
+</head>
+<body>
+    <h1>Update Email</h1>
+    <form action="update_email.php" method="post">
+        <label for="email">New Email:</label>
+        <input type="email" id="email" name="email">
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>
+
+<!-- update_email.php -->
+<?php
+session_start();
+$userId = $_SESSION['user_id'];
+$newEmail = $_POST['email'];
+$conn = new mysqli("localhost", "root", "password", "test_db");
+
+// Vulnerable update without CSRF protection
+$sql = "UPDATE users SET email = '$newEmail' WHERE id = $userId";
+if ($conn->query($sql) === TRUE) {
+    echo "Email updated successfully";
+} else {
+    echo "Error updating email: " . $conn->error;
+}
+
+$conn->close();
+?>

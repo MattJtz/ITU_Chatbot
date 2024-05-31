@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vulnerable IDOR Example</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <?php
+    $userId = $_GET['id'];
+    $conn = new mysqli("localhost", "root", "password", "test_db");
+
+    // Vulnerable direct object reference
+    $sql = "SELECT * FROM users WHERE id = $userId";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            echo "User: " . $row["username"] . "<br>";
+            echo "Email: " . $row["email"] . "<br>";
+        }
+    } else {
+        echo "No results found";
+    }
+
+    $conn->close();
+    ?>
+</body>
+</html>

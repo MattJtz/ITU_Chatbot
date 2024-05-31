@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vulnerable XSS Example</title>
+</head>
+<body>
+    <h1>Welcome to the Vulnerable Site</h1>
+    <form action="" method="get">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" name="name">
+        <button type="submit">Submit</button>
+    </form>
+
+    <div>
+        <p>Hello, <span id="user-name"></span>!</p>
+    </div>
+
+    <script>
+        // This script is vulnerable to XSS
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        if (name) {
+            document.getElementById('user-name').innerHTML = name;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure SQL Injection Example</title>
+</head>
+<body>
+    <h1>Search Users</h1>
+    <form action="" method="get">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <button type="submit">Search</button>
+    </form>
+
+    <?php
+    if (isset($_GET['username'])) {
+        $username = $_GET['username'];
+        $conn = new mysqli("localhost", "root", "password", "test_db");
+
+        // Secure SQL query using prepared statements
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo "User: " . $row["username"] . "<br>";
+            }
+        } else {
+            echo "No results found";
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
+    ?>
+</body>
+</html>
